@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <title>Admin Panel</title>
+    <?php include 'meta.html'; ?>
+    <style>
+        input, textarea { display: block; width: 100%; margin-bottom: 10px; }
+        body{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        .profile-card {
+      max-width: 500px;
+      margin: auto;
+      /* border-radius: 15px; */
+      /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); */
+    }
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      /* border: 4px solid #fff; */
+      margin-top: -75px;
+      background: #f8f9fa;
+    }
+    </style>
+</head>
+<body class="h-100 pt-sm-3 pb-sm-3">
+        <div class="container h-100 bg-white p-3 d-flex fs-4">
+            <?php include 'admin-aside.html'; ?>
+            <div class="col-9 h-100 overflow-auto">
+                <!-- <div class="card profile-card text-center p-4 bg-white">
+                    <div class="position-relative">
+                      <img src="https://via.placeholder.com/150" alt="Profile Photo" class="profile-image mx-auto">
+                    </div>
+                    <div class="card-body">
+                      <h3 class="card-title mb-1">Alice Johnson</h3>
+                      <p class="text-muted mb-2">Student ID: <strong>alice@Domaarow.com</strong></p>
+                      <p class="text-muted mb-2">Class: <strong>Basic 5</strong></p>
+                      <hr>
+                      <div class="text-start">
+                        <p><strong>Email:</strong> alice@domaarow.com</p>
+                        <p><strong>Phone:</strong> +234 801 234 5678</p>
+                        <p><strong>Gender:</strong> Female</p>
+                        <p><strong>Date of Birth:</strong> 2008-06-15</p>
+                        <p><strong>Address:</strong> 12 School Road, Lagos, Nigeria</p>
+                      </div>
+                      <a href="edit-profile.php" class="btn btn-outline-primary mt-3">Edit Profile</a>
+                    </div>
+                </div> -->
+                <?= view_profiles($connection, $_GET['u'] ?? 0); ?>
+            </div>
+        </div>
+        <script>
+            function search_student(e) {
+              const query = e.value;
+              
+              fetch("search-student?q=" + encodeURIComponent(query))
+                .then(response => response.text())
+                .then(html => {
+                  document.getElementById("studentTableBody").innerHTML = html;
+                })
+                .catch(error => {
+                  console.error("Search error:", error);
+                  document.getElementById("studentTableBody").innerHTML = "<tr><td colspan='5'>Error loading results.</td></tr>";
+                });
+            }
+            </script>
+</body>
+</html>

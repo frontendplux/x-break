@@ -1,0 +1,18 @@
+[
+    {
+        "class":"basic 5",
+        "access-code":"",
+        "teacher":"",
+        "subject":"",
+        "description":"",
+        "date":"",
+        "timeout":45,
+        "questions":[
+                        {
+                            "question":"how to cash fish",
+                            "answer":"0",
+                            "options":[]
+                        }
+                   ],
+    }
+]

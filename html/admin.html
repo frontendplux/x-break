@@ -1,0 +1,51 @@
+<!-- html/admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include 'meta.html'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="d-flex align-items-center justify-content-center vh-100 bg-light h-100 pt-sm-3 pb-sm-3">
+    <div class="container h-100 bg-light d-flex align-items-center justify-content-center fs-1">
+        <div class="card p-4 w-100" style="max-width: 400px;">
+            <h3>Admin Login</h3>
+            <input id="adminId" class="form-control mb-2" placeholder="Admin ID">
+            <input id="adminPass" class="form-control mb-3" type="password" placeholder="Password">
+            <button class="btn btn-primary w-100" onclick="adminLogin()">Login</button>
+        </div>
+    </div>
+
+    <script>
+    function adminLogin() {
+        const id = document.getElementById('adminId').value.trim();
+        const pass = document.getElementById('adminPass').value.trim();
+
+        if (!id || !pass) {
+            Swal.fire('Input Required', 'Please enter both Admin ID and Password.', 'warning');
+            return;
+        }
+
+        fetch("app.php?url=admin-login", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({id, pass})
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            if (data.status) {
+                Swal.fire('Welcome', data.message, 'success').then(() => {
+                    window.location.href = 'admin-panel';
+                });
+            } else {
+                Swal.fire('Error', data.message, 'error');
+            }
+        })
+        .catch(err => {
+            console.error('Fetch error:', err);
+            Swal.fire('Error', 'Network or server issue.', 'error');
+        });
+    }
+    </script>
+</body>
+</html>

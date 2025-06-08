@@ -1,0 +1,72 @@
+<?php
+session_start();
+if (!isset($_SESSION['exam'])) {
+    header("Location: app.php?url=start");
+    exit;
+}
+
+$exam = $_SESSION['exam'];
+$questions = $exam['questions'];
+$duration = $exam['duration']; // in minutes
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?= htmlspecialchars($exam['title']) ?> | Exam</title>
+    <link rel="stylesheet" href="your-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="container">
+    <h2><?= htmlspecialchars($exam['title']) ?></h2>
+    <div id="timer" style="font-size: 1.5em; font-weight: bold;"></div>
+
+    <form id="examForm">
+        <?php foreach ($questions as $index => $q): ?>
+            <div class="question-block">
+                <p><strong>Q<?= $index + 1 ?>:</strong> <?= htmlspecialchars($q['question']) ?></p>
+                <?php foreach ($q['options'] as $key => $opt): ?>
+                    <label>
+                        <input type="radio" name="answers[<?= $index ?>]" value="<?= $key ?>"> <?= htmlspecialchars($opt) ?>
+                    </label><br>
+                <?php endforeach; ?>
+            </div>
+        <?php endforeach; ?>
+        <button type="submit">Submit Exam</button>
+    </form>
+</div>
+
+<script>
+let duration = <?= $duration ?> * 60;
+let timerInterval = setInterval(() => {
+    const mins = Math.floor(duration / 60);
+    const secs = duration % 60;
+    document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    if (--duration < 0) {
+        clearInterval(timerInterval);
+        document.getElementById('examForm').submit(); // auto-submit
+    }
+}, 1000);
+
+document.getElementById('examForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('php/submit_exam.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status) {
+            Swal.fire('Submitted!', data.message, 'success').then(() => {
+                window.location.href = 'app.php?url=index';
+            });
+        } else {
+            Swal.fire('Error', data.message, 'error');
+        }
+    });
+});
+</script>
+</body>
+</html>
